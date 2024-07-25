@@ -1,0 +1,4 @@
+name: RocketJumping
+version: '1.0-SNAPSHOT'
+main: org.twipnetwork.rocketJumping.RocketJumping
+api-version: '1.21'
