@@ -16,7 +16,6 @@ public final class RocketJumping extends JavaPlugin implements Listener {
 
     private double boostPower;
     private boolean damageShooter;
-    private boolean damageOthers;
 
     @Override
     public void onEnable() {
@@ -24,7 +23,6 @@ public final class RocketJumping extends JavaPlugin implements Listener {
         FileConfiguration config = getConfig();
         boostPower = config.getDouble("boostPower", 4.0);
         damageShooter = config.getBoolean("damageShooter", false);
-        damageOthers = config.getBoolean("damageOthers", true);
         Bukkit.getPluginManager().registerEvents(this, this);
     }
 
@@ -36,13 +34,11 @@ public final class RocketJumping extends JavaPlugin implements Listener {
     public void onProjectileHit(ProjectileHitEvent event) {
         Projectile projectile = event.getEntity();
 
-        if (projectile instanceof Firework) {
-            Firework firework = (Firework) projectile;
+        if (projectile instanceof Firework firework) {
             Entity shooter = (Entity) firework.getShooter();
 
             for (Entity entity : firework.getNearbyEntities(5, 5, 5)) {
-                if (entity instanceof Player) {
-                    Player player = (Player) entity;
+                if (entity instanceof Player player) {
                     Vector boostDirection = player.getLocation().toVector().subtract(firework.getLocation().toVector()).normalize();
                     player.setVelocity(player.getVelocity().add(boostDirection.multiply(boostPower)));
 
@@ -52,14 +48,6 @@ public final class RocketJumping extends JavaPlugin implements Listener {
                 } else {
                     Vector boostDirection = entity.getLocation().toVector().subtract(firework.getLocation().toVector()).normalize();
                     entity.setVelocity(entity.getVelocity().add(boostDirection.multiply(boostPower)));
-                }
-            }
-
-            if (!damageOthers) {
-                for (Entity entity : firework.getNearbyEntities(5, 5, 5)) {
-                    if (!(entity instanceof Player && entity.equals(shooter))) {
-                        ((Player) entity).setNoDamageTicks(1);
-                    }
                 }
             }
         }
