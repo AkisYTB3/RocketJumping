@@ -4,3 +4,6 @@ boostPower: 4.0
 
 # damageShooter defines whether the shooter gets damages by their own fireworks (default: false)
 damageShooter: false
+
+# onlyCrossbow defines whether the only fireworks shot from a crossbow should launch entities or if all fireworks (default: true)
+onlyCrossbow: true
