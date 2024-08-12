@@ -22,9 +22,7 @@ public final class RocketJumping extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        FileConfiguration config = getConfig();
-        boostPower = config.getDouble("boostPower", 4.0);
-        damageShooter = config.getBoolean("damageShooter", false);
+        loadConfigValues();
         Bukkit.getPluginManager().registerEvents(this, this);
     }
 
@@ -38,7 +36,6 @@ public final class RocketJumping extends JavaPlugin implements Listener {
         damageShooter = config.getBoolean("damageShooter", false);
     }
 
-
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent event) {
         Projectile projectile = event.getEntity();
@@ -47,16 +44,11 @@ public final class RocketJumping extends JavaPlugin implements Listener {
             Entity shooter = (Entity) firework.getShooter();
 
             for (Entity entity : firework.getNearbyEntities(5, 5, 5)) {
-                if (entity instanceof Player player) {
-                    Vector boostDirection = player.getLocation().toVector().subtract(firework.getLocation().toVector()).normalize();
-                    player.setVelocity(player.getVelocity().add(boostDirection.multiply(boostPower)));
+                Vector boostDirection = entity.getLocation().toVector().subtract(firework.getLocation().toVector()).normalize();
+                entity.setVelocity(entity.getVelocity().add(boostDirection.multiply(boostPower)));
 
-                    if (!damageShooter && player.equals(shooter)) {
-                        player.setNoDamageTicks(1);
-                    }
-                } else {
-                    Vector boostDirection = entity.getLocation().toVector().subtract(firework.getLocation().toVector()).normalize();
-                    entity.setVelocity(entity.getVelocity().add(boostDirection.multiply(boostPower)));
+                if (entity instanceof Player player && !damageShooter && player.equals(shooter)) {
+                    player.setNoDamageTicks(1);
                 }
             }
         }
@@ -74,4 +66,5 @@ public final class RocketJumping extends JavaPlugin implements Listener {
         }
         return false;
     }
+
 }

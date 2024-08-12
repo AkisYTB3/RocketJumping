@@ -1,7 +1,7 @@
 name: RocketJumping
 version: '1.4-1.21'
 main: org.twipnetwork.rocketJumping.RocketJumping
-api-version: '1.21'
+api-version: 1.21
 commands:
   rocketlauncher:
     description: Reloads the RocketJumping configuration.
