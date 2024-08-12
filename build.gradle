@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'org.twipnetwork'
-version = '1.4-1.21'
+version = '1.5-1.21'
 
 repositories {
     mavenCentral()
