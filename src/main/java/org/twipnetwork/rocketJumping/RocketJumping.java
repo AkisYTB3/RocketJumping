@@ -1,8 +1,7 @@
 package org.twipnetwork.rocketJumping;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -13,6 +12,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
+
+import java.util.Objects;
 
 public final class RocketJumping extends JavaPlugin implements Listener {
 
@@ -35,7 +36,6 @@ public final class RocketJumping extends JavaPlugin implements Listener {
         boostPower = config.getDouble("boostPower", 4.0);
         damageShooter = config.getBoolean("damageShooter", false);
     }
-
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent event) {
         Projectile projectile = event.getEntity();
@@ -56,15 +56,16 @@ public final class RocketJumping extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("rocketlauncher")) {
+        if (command.getName().equalsIgnoreCase("rocketjumping")) {
             if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
                 reloadConfig();
                 loadConfigValues();
-                sender.sendMessage("§aRocketLauncher config reloaded!");
+                sender.sendMessage("§aRocketJumping config reloaded!");
                 return true;
             }
         }
         return false;
     }
+
 
 }
