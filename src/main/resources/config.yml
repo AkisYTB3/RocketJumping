@@ -1,6 +1,21 @@
 # config.yml
-# boostPower sets how powerful the rocket boost is (default: 4.0)
-boostPower: 4.0
+# DO NOT TOUCH
+config-version: 2.0
+
+# boostPower sets how powerful the rocket boost is (default: 1.5)
+boostPower: 1.5
+
+# multiplier sets how powerful the multiplier is for each flight level (default: 0.8)
+multiplier: 0.8
 
 # damageShooter defines whether the shooter gets damages by their own fireworks (default: false)
 damageShooter: false
+
+# Maximum distance (in blocks) that entities will be affected by the rocket jump
+radius: 5.0
+
+# Should creeper fireworks cause explosions? (default: true)
+creeperExplodeRockets: true
+explosionPower: 2.0 # default: 2.00
+explosionSetFire: false # default: false
+explosionBreakBlocks: false # default: false
