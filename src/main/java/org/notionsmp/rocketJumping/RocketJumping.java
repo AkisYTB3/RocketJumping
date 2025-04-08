@@ -3,6 +3,7 @@ package org.notionsmp.rocketJumping;
 import co.aikar.commands.PaperCommandManager;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.notionsmp.rocketJumping.commands.RocketJumpingCommand;
@@ -31,23 +32,31 @@ public final class RocketJumping extends JavaPlugin implements Listener {
     }
 
     private void migrateConfig() {
-        FileConfiguration config = getConfig();
 
-        if (!config.contains("config-version") || config.getDouble("config-version") != CURRENT_CONFIG_VERSION) {
-            double oldBoostPower = config.getDouble("boostPower", 4.0);
-            boolean oldDamageShooter = config.getBoolean("damageShooter", false);
+        File configFile = new File(getDataFolder(), "config.yml");
+        YamlConfiguration diskConfig = YamlConfiguration.loadConfiguration(configFile);
 
-            File configFile = new File(getDataFolder(), "config.yml");
-            configFile.delete();
+        if (!diskConfig.contains("config-version") || diskConfig.getDouble("config-version") < CURRENT_CONFIG_VERSION) {
+            getLogger().info("Config migration needed - current version: " +
+                    (diskConfig.contains("config-version") ? diskConfig.getDouble("config-version") : "none"));
 
-            saveDefaultConfig();
-            reloadConfig();
+            double oldBoostPower = diskConfig.getDouble("boostPower", 4.0);
+            boolean oldDamageShooter = diskConfig.getBoolean("damageShooter", false);
 
-            config.set("boostPower", oldBoostPower);
-            config.set("damageShooter", oldDamageShooter);
+            if (configFile.delete()) {
+                saveDefaultConfig();
+                reloadConfig();
 
-            config.set("config-version", CURRENT_CONFIG_VERSION);
-            saveConfig();
+                FileConfiguration newConfig = getConfig();
+                newConfig.set("boostPower", oldBoostPower);
+                newConfig.set("damageShooter", oldDamageShooter);
+                newConfig.set("config-version", CURRENT_CONFIG_VERSION);
+                saveConfig();
+
+                getLogger().info("Config migrated successfully to version " + CURRENT_CONFIG_VERSION);
+            } else {
+                getLogger().warning("Failed to delete old config file during migration");
+            }
         }
     }
 
