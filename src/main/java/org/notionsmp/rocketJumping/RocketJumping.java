@@ -1,4 +1,4 @@
-package org.twipnetwork.rocketJumping;
+package org.notionsmp.rocketJumping;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
@@ -12,8 +12,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
-
-import java.util.Objects;
 
 public final class RocketJumping extends JavaPlugin implements Listener {
 

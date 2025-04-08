@@ -1,6 +1,6 @@
 name: RocketJumping
 version: '1.6-1.21'
-main: org.twipnetwork.rocketJumping.RocketJumping
+main: org.notionsmp.rocketJumping.RocketJumping
 api-version: 1.21
 commands:
   rocketjumping:
