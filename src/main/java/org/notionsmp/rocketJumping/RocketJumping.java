@@ -1,69 +1,69 @@
 package org.notionsmp.rocketJumping;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.*;
+import co.aikar.commands.PaperCommandManager;
+import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Firework;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.Vector;
+import org.notionsmp.rocketJumping.commands.RocketJumpingCommand;
+import org.notionsmp.rocketJumping.listeners.ProjectileHit;
 
+import java.io.File;
+
+@Getter
 public final class RocketJumping extends JavaPlugin implements Listener {
 
-    private double boostPower;
-    private boolean damageShooter;
+    @Getter
+    private static RocketJumping instance;
+    private static final double CURRENT_CONFIG_VERSION = 2.0;
+    private PaperCommandManager commandManager;
 
     @Override
     public void onEnable() {
+        instance = this;
         saveDefaultConfig();
-        loadConfigValues();
-        Bukkit.getPluginManager().registerEvents(this, this);
+        migrateConfig();
+
+        registerListener(new ProjectileHit());
+
+        commandManager = new PaperCommandManager(this);
+        commandManager.registerCommand(new RocketJumpingCommand());
     }
 
-    @Override
-    public void onDisable() {
-    }
-
-    private void loadConfigValues() {
+    private void migrateConfig() {
         FileConfiguration config = getConfig();
-        boostPower = config.getDouble("boostPower", 4.0);
-        damageShooter = config.getBoolean("damageShooter", false);
-    }
-    @EventHandler
-    public void onProjectileHit(ProjectileHitEvent event) {
-        Projectile projectile = event.getEntity();
 
-        if (projectile instanceof Firework firework) {
-            Entity shooter = (Entity) firework.getShooter();
+        if (!config.contains("config-version") || config.getDouble("config-version") != CURRENT_CONFIG_VERSION) {
+            double oldBoostPower = config.getDouble("boostPower", 4.0);
+            boolean oldDamageShooter = config.getBoolean("damageShooter", false);
 
-            for (Entity entity : firework.getNearbyEntities(5, 5, 5)) {
-                Vector boostDirection = entity.getLocation().toVector().subtract(firework.getLocation().toVector()).normalize();
-                entity.setVelocity(entity.getVelocity().add(boostDirection.multiply(boostPower)));
+            File configFile = new File(getDataFolder(), "config.yml");
+            configFile.delete();
 
-                if (entity instanceof Player player && !damageShooter && player.equals(shooter)) {
-                    player.setNoDamageTicks(1);
-                }
-            }
+            saveDefaultConfig();
+            reloadConfig();
+
+            config.set("boostPower", oldBoostPower);
+            config.set("damageShooter", oldDamageShooter);
+
+            config.set("config-version", CURRENT_CONFIG_VERSION);
+            saveConfig();
         }
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("rocketjumping")) {
-            if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
-                reloadConfig();
-                loadConfigValues();
-                sender.sendMessage("§aRocketJumping config reloaded!");
-                return true;
-            }
-        }
-        return false;
+    private void registerListener(Listener listener) {
+        getServer().getPluginManager().registerEvents(listener, this);
     }
 
-
+    public boolean reloadPluginConfig() {
+        try {
+            reloadConfig();
+            saveDefaultConfig();
+            getLogger().info("Config reloaded successfully!");
+            return true;
+        } catch (Exception e) {
+            getLogger().severe("Failed to reload config: " + e.getMessage());
+            return false;
+        }
+    }
 }
