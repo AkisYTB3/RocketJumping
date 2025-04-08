@@ -1,6 +1,0 @@
-# config.yml
-# boostPower sets how powerful the rocket boost is (default: 4.0)
-boostPower: 4.0
-
-# damageShooter defines whether the shooter gets damages by their own fireworks (default: false)
-damageShooter: false
