@@ -8,15 +8,16 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.Vector;
 import org.notionsmp.rocketJumping.RocketJumping;
 
-public class ProjectileHit implements Listener {
+public class RocketListener implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void on(ProjectileHitEvent event) {
         Projectile projectile = event.getEntity();
 
@@ -59,8 +60,10 @@ public class ProjectileHit implements Listener {
 
                 entity.setVelocity(entity.getVelocity().add(boostDirection.multiply(finalBoostPower)));
 
+                RocketJumping.getInstance().getLogger().info("damageShooter config value: " + damageShooter);
                 if (entity instanceof Player player && !damageShooter && player.equals(shooter)) {
-                    player.setNoDamageTicks(1);
+                    RocketJumping.getInstance().getLogger().info("Passed damageShooter checks:");
+                    player.setNoDamageTicks(5);
                 }
             }
 

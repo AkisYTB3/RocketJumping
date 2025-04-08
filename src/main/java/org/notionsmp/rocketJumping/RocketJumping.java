@@ -7,7 +7,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.notionsmp.rocketJumping.commands.RocketJumpingCommand;
-import org.notionsmp.rocketJumping.listeners.ProjectileHit;
+import org.notionsmp.rocketJumping.listeners.RocketListener;
 
 import java.io.File;
 
@@ -25,7 +25,7 @@ public final class RocketJumping extends JavaPlugin implements Listener {
         saveDefaultConfig();
         migrateConfig();
 
-        registerListener(new ProjectileHit());
+        registerListener(new RocketListener());
 
         commandManager = new PaperCommandManager(this);
         commandManager.registerCommand(new RocketJumpingCommand());
