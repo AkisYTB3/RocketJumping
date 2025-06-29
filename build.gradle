@@ -25,7 +25,6 @@ dependencies {
 
     implementation("co.aikar:acf-paper:${paperacf}")
 
-    compileOnly("net.kyori:adventure-text-minimessage:${adventure}")
 
     // Lombok
     compileOnly("org.projectlombok:lombok:${lombok}")
