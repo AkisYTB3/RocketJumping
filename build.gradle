@@ -35,10 +35,8 @@ shadowJar {
     relocate 'co.aikar.commands', 'org.notionsmp.rocketJumping.libs.acf'
     relocate 'co.aikar.locales', 'org.notionsmp.rocketJumping.libs.locales'
 
-    exclude('org.projectlombok:lombok:.*', 'net.kyori:.*')
+    exclude('org.projectlombok:lombok:.*')
     exclude 'META-INF/**'
-
-    minimize()
 
     archiveClassifier.set('')
 }
@@ -69,7 +67,7 @@ processResources {
     def props = [version: version]
     inputs.properties props
     filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
+    filesMatching('paper-plugin.yml') {
         expand props
     }
 }
